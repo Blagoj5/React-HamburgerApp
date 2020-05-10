@@ -7,7 +7,7 @@
   padding: 10px;
 }
 
-.Inputs {
+/* .Inputs {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -16,7 +16,7 @@
 
 .Inputs input {
   margin: 0.3rem 0;
-}
+} */
 
 @media (min-width: 600px) {
   .ContactData {

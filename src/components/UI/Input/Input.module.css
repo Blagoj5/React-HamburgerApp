@@ -1,0 +1,39 @@
+.Input {
+  width: 100%;
+  margin: 1rem auto;
+  padding: 0 0.5rem;
+}
+
+.InputElement {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  border-color: rgb(233, 211, 184);
+}
+
+.Label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.InputElement:focus {
+  outline: none;
+  background: rgb(233, 211, 184);
+}
+
+.Select {
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(233, 211, 184);
+}
+
+.Select option {
+  text-transform: capitalize;
+}
+
+.ElementError {
+  background: #e04f4f67;
+}

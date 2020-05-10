@@ -19,14 +19,33 @@ export class Checkout extends Component {
 
   componentWillMount() {
     const query = new URLSearchParams(this.props.location.search);
-    const ingredients = {};
+    let ingredients = {};
     for (let param of query.entries()) {
+      //  The + means it needs to be INTEGER
       ingredients[param[0]] = +param[1];
+    }
+    let totalP = 0;
+    try {
+      totalP = this.props.location.state.totalPrice;
+      localStorage.setItem("totalPrice", JSON.stringify(totalP.toFixed(2)));
+      localStorage.setItem("ingredients", JSON.stringify(ingredients));
+    } catch (error) {
+      // If it comes here it means i refreshed page and lost state
+      totalP = JSON.parse(localStorage.getItem("totalPrice"));
+      ingredients = JSON.parse(localStorage.getItem("ingredients"));
     }
     this.setState({
       ingredients: ingredients,
-      totalPrice: this.props.location.state.totalPrice,
+      // totalprice throws error  because the state from the redirecting isn't saving on refresh
+      // way to solve it: save it in local storage and pull it from there
+      // or just use it from url
+      totalPrice: totalP,
     });
+  }
+
+  componentWillUnmount() {
+    localStorage.removeItem("totalPrice");
+    localStorage.removeItem("ingredients");
   }
 
   render() {
