@@ -74,20 +74,7 @@ class BurgerBuilder extends Component {
   };
 
   purchaseContinueHandler = () => {
-    let queryParams = [];
-    for (let ingredient in this.state.ingredients) {
-      queryParams.push(
-        encodeURIComponent(ingredient) +
-          "=" +
-          encodeURIComponent(this.state.ingredients[ingredient])
-      );
-    }
-    const queryString = queryParams.join("&");
-    this.props.history.push({
-      pathname: "/checkout",
-      search: "?" + queryString,
-      state: { totalPrice: this.state.totalPrice },
-    });
+    this.props.history.push("/checkout");
   };
 
   componentDidMount() {
@@ -103,6 +90,7 @@ class BurgerBuilder extends Component {
   }
 
   render() {
+    console.log();
     const disabledInfo = {
       ...this.state.ingredients,
     };

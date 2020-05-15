@@ -38,6 +38,14 @@ const reducer = (state = initialState, action) => {
           [action.ingredientName]: state.ingredients[action.ingredientName] - 1,
         },
       };
+    case actionTypes.UPDATE_STATE_ON_REFRESH:
+      return {
+        ...action.prevState,
+      };
+    case actionTypes.RELOAD_INITIAL_STAGE:
+      return {
+        ...initialState,
+      };
     default:
       return state;
   }
