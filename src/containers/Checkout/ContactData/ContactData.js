@@ -5,6 +5,8 @@ import axios from "../../../axios-orders";
 import Spinner from "../../../components/UI/Spinner/Spinner";
 import Input from "../../../components/UI/Input/Input";
 import { connect } from "react-redux";
+import withErrorHandling from "../../../hoc/withErrorHandling/withErrorHandling";
+import * as actionCreators from "../../../store/actions/index";
 
 export class ContactData extends Component {
   state = {
@@ -91,7 +93,6 @@ export class ContactData extends Component {
         valid: true,
       },
     },
-    loading: false,
     formValid: false,
   };
 
@@ -143,8 +144,6 @@ export class ContactData extends Component {
         updatedOrderForm[inputElementIdentifier].valid && formIsValid;
     }
 
-    console.log(formIsValid);
-
     this.setState({
       orderForm: updatedOrderForm,
       formValid: formIsValid,
@@ -153,7 +152,6 @@ export class ContactData extends Component {
 
   orderHandler = (event) => {
     event.preventDefault();
-    this.setState({ loading: true });
 
     const formData = {};
     for (let inputType in this.state.orderForm) {
@@ -165,13 +163,8 @@ export class ContactData extends Component {
       price: this.props.totalP,
       orderData: formData,
     };
-    axios
-      .post("/orders.json", orders)
-      .then((response) => {
-        this.setState({ loading: false });
-        this.props.history.push("/");
-      })
-      .catch((err) => this.setState({ loading: false }));
+
+    this.props.burgerOrderStart(orders);
 
     // One way, you can pass the whole state or part of the state to the other component OR with search queries
     // this.props.history.push("/checkout", this.state.ingredients);
@@ -206,7 +199,7 @@ export class ContactData extends Component {
         </Button>
       </form>
     );
-    if (this.state.loading) {
+    if (this.props.loading) {
       form = <Spinner />;
     }
 
@@ -221,9 +214,21 @@ export class ContactData extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    ingr: state.ingredients,
-    totalP: state.totalPrice,
+    ingr: state.burgerBuilder.ingredients,
+    totalP: state.burgerBuilder.totalPrice,
+    loading: state.order.loading,
   };
 };
 
-export default connect(mapStateToProps)(ContactData);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    burgerOrderStart: (orderData) => {
+      dispatch(actionCreators.purchaseBurger(orderData));
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withErrorHandling(ContactData, axios));

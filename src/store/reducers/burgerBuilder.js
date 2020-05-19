@@ -1,4 +1,4 @@
-import * as actionTypes from "./actions";
+import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
   ingredients: {
@@ -8,6 +8,7 @@ const initialState = {
     cheese: 0,
   },
   totalPrice: 4,
+  error: false,
 };
 
 const INGREDIENTS_PRICES = {
@@ -30,7 +31,6 @@ const reducer = (state = initialState, action) => {
           state.totalPrice + INGREDIENTS_PRICES[action.ingredientName],
       };
     case actionTypes.REMOVE_INGREDIENT:
-      console.log("logic for removing ingredient");
       return {
         ...state,
         ingredients: {
@@ -38,13 +38,30 @@ const reducer = (state = initialState, action) => {
           [action.ingredientName]: state.ingredients[action.ingredientName] - 1,
         },
       };
-    case actionTypes.UPDATE_STATE_ON_REFRESH:
+    case actionTypes.SAVE_INGR_STATE_ON_REFRESH:
       return {
+        ...state,
         ...action.prevState,
       };
-    case actionTypes.RELOAD_INITIAL_STAGE:
+    case actionTypes.RELOAD_INGR_INITIAL_STATE:
       return {
         ...initialState,
+      };
+    case actionTypes.INIT_INGREDIENTS:
+      return {
+        ...state,
+        ingredients: {
+          salad: action.ingredients.salad,
+          bacon: action.ingredients.bacon,
+          cheese: action.ingredients.cheese,
+          meat: action.ingredients.meat,
+        },
+        error: false,
+      };
+    case actionTypes.ERROR_LOADING_INGREDIENTS:
+      return {
+        ...state,
+        error: true,
       };
     default:
       return state;

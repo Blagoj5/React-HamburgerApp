@@ -7,31 +7,15 @@ import axios from "../../axios-orders";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import withErrorHandling from "../../hoc/withErrorHandling/withErrorHandling";
 import { connect } from "react-redux";
-import * as actionTypes from "../../store/actions";
+import * as actionCreators from "../../store/actions/index";
 
 class BurgerBuilder extends Component {
   state = {
     purchase: false,
     loading: false,
-    error: false,
   };
 
   checkPurchasable = (ingredients) => {
-    // solving with using for
-    // console.log("checking purchasable");
-    // let itDidBreak = false;
-    // const ingredientsValues = Object.values(ingredients);
-    // for (let ingredientValue of ingredientsValues) {
-    //   if (ingredientValue > 0) {
-    //     itDidBreak = true;
-    //     this.setState({ purchasable: true });
-    //     break;
-    //   }
-    // }
-    // if (!itDidBreak) {
-    //   this.setState({ purchasable: false });
-    // }
-
     const ingredientsValues = Object.values(ingredients).reduce(
       (sum, currentEl) => {
         return sum + currentEl;
@@ -40,30 +24,6 @@ class BurgerBuilder extends Component {
     );
     return ingredientsValues > 0;
   };
-
-  // addIngredientHandler = (type) => {
-  //   const oldCount = this.state.ingredients[type];
-  //   const newIngredients = {
-  //     ...this.state.ingredients,
-  //   };
-  //   newIngredients[type] = oldCount + 1;
-  //   const newPrice = this.state.totalPrice + INGREDIENTS_PRICES[type];
-  //   this.setState({ ingredients: newIngredients, totalPrice: newPrice });
-  //   this.checkPurchasable(newIngredients);
-  // };
-
-  // removeIngredientHandler = (type) => {
-  //   const oldCount = this.state.ingredients[type];
-  //   if (oldCount - 1 >= 0) {
-  //     const newIngredients = {
-  //       ...this.state.ingredients,
-  //     };
-  //     newIngredients[type] = oldCount - 1;
-  //     const newPrice = this.state.totalPrice - INGREDIENTS_PRICES[type];
-  //     this.setState({ ingredients: newIngredients, totalPrice: newPrice });
-  //     this.checkPurchasable(newIngredients);
-  //   }
-  // };
 
   purchaseHandler = () => {
     this.setState({ purchase: true });
@@ -74,38 +34,31 @@ class BurgerBuilder extends Component {
   };
 
   purchaseContinueHandler = () => {
+    this.props.initPurchase();
     this.props.history.push("/checkout");
   };
 
   componentDidMount() {
-    axios
-      .get("/ingredients.json")
-      .then((response) => {
-        this.setState({ ingredients: response.data });
-      })
-      .catch((err) => {
-        console.log("here");
-        this.setState({ error: true });
-      });
+    this.props.initIngredients();
   }
 
   render() {
     console.log();
     const disabledInfo = {
-      ...this.state.ingredients,
+      ...this.props.ingr,
     };
     for (let key in disabledInfo) {
       disabledInfo[key] = disabledInfo[key] <= 0; // return salad: true, cheese: false
     }
 
     let orderSummary = null;
-    let burger = this.state.error ? (
+    let burger = this.props.error ? (
       <p>Ingredients cannot be fetched</p>
     ) : (
       <Spinner />
     );
 
-    if (this.state.ingredients) {
+    if (this.props.ingr) {
       burger = (
         <>
           <Burger ingredients={this.props.ingr} />
@@ -129,10 +82,6 @@ class BurgerBuilder extends Component {
       );
     }
 
-    if (this.state.loading) {
-      orderSummary = <Spinner />;
-    }
-
     return (
       <>
         <Modal show={this.state.purchase} onClose={this.purchaseCancelHandler}>
@@ -146,23 +95,20 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    ingr: state.ingredients,
-    totalP: state.totalPrice,
+    ingr: state.burgerBuilder.ingredients,
+    totalP: state.burgerBuilder.totalPrice,
+    error: state.burgerBuilder.error,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     addIngredientHandler: (ingredientName) =>
-      dispatch({
-        type: actionTypes.ADD_INGREDIENT,
-        ingredientName: ingredientName,
-      }),
+      dispatch(actionCreators.addIngredient(ingredientName)),
     removeIngredientHandler: (ingredientName) =>
-      dispatch({
-        type: actionTypes.REMOVE_INGREDIENT,
-        ingredientName: ingredientName,
-      }),
+      dispatch(actionCreators.removeIngredient(ingredientName)),
+    initIngredients: () => dispatch(actionCreators.initIngredients()),
+    initPurchase: () => dispatch(actionCreators.initPurchase()),
   };
 };
 
