@@ -1,13 +1,13 @@
 import * as actionTypes from "../actions/actionTypes";
-import { updateObject } from "../utility";
+import { updateObject } from "../../shared/utility";
 
 const initialState = {
   orders: [],
   loading: false,
-  purchased: true,
+  purchased: false,
 };
 
-const purchaseBurgerSuccess = (action, state) => {
+const purchaseBurgerSuccess = (state, action) => {
   const newOrderData = {
     ...action.orderData,
     id: action.orderId,

@@ -1,0 +1,20 @@
+.Auth {
+  margin: auto;
+  padding: 1rem;
+  width: 80%;
+  border: 1px solid rgba(17, 7, 7, 0.459);
+  text-align: center;
+  background: rgba(149, 149, 149, 0.034);
+  border-radius: 5px;
+}
+
+.Auth h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 400px) {
+  .Auth {
+    width: 350px;
+  }
+}

@@ -15,3 +15,12 @@ export const INIT_PURCHASE = "INIT_PURCHASE";
 export const INIT_ORDERS_SUCCESS = "INIT_ORDERS_SUCCESS";
 export const INIT_ORDERS_FAIL = "INIT_ORDERS_FAIL";
 export const INIT_ORDERS_START = "INIT_ORDERS_START";
+
+// Action Types for Sign IN/UP Redux state
+export const AUTH_START = "AUTH_START";
+export const AUTH_SUCCESS = "AUTH_SUCCESS";
+export const AUTH_FAIL = "AUTH_FAIL";
+export const AUTH_LOGOUT = "AUTH_LOGOUT";
+
+export const REFRESH_ERROR_STATE = "REFRESH_ERROR_STATE";
+export const SET_REDIRECT_AUTH_URL = "SET_REDIRECT_AUTH_URL";

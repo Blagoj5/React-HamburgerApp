@@ -1,0 +1,13 @@
+.Alert {
+  width: 100%;
+  border-radius: 5px;
+  background: rgba(233, 77, 77, 0.418);
+  transition: opacity 0.5s ease-out;
+  opacity: 1;
+  margin-bottom: 1rem;
+  padding: 0.4rem;
+}
+
+.Alert p {
+  margin: 0;
+}

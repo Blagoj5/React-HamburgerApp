@@ -162,9 +162,10 @@ export class ContactData extends Component {
       ingredients: this.props.ingr,
       price: this.props.totalP,
       orderData: formData,
+      userId: this.props.userId,
     };
 
-    this.props.burgerOrderStart(orders);
+    this.props.burgerOrderStart(orders, this.props.token);
 
     // One way, you can pass the whole state or part of the state to the other component OR with search queries
     // this.props.history.push("/checkout", this.state.ingredients);
@@ -217,13 +218,15 @@ const mapStateToProps = (state) => {
     ingr: state.burgerBuilder.ingredients,
     totalP: state.burgerBuilder.totalPrice,
     loading: state.order.loading,
+    token: state.auth.token,
+    userId: state.auth.userId,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    burgerOrderStart: (orderData) => {
-      dispatch(actionCreators.purchaseBurger(orderData));
+    burgerOrderStart: (orderData, token) => {
+      dispatch(actionCreators.purchaseBurger(orderData, token));
     },
   };
 };
