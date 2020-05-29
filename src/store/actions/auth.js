@@ -62,7 +62,6 @@ export const auth = (email, password, isSigning) => {
     axios
       .post(url, signInfo)
       .then((response) => {
-        console.log(response);
         // expireDate will be the time in miliseconds
         const expireDate = new Date(
           new Date().getTime() + response.data.expiresIn * 1000
@@ -74,7 +73,6 @@ export const auth = (email, password, isSigning) => {
         dispatch(logoutOnExpire(response.data.expiresIn));
       })
       .catch((err) => {
-        console.log(err);
         // refreshErrorState refreshes my error state in case i submit again with the same info
         // OR with wrong info without reloading the page (in that case the prev error is saved, and my alert won't display)
         dispatch(refreshErrorState());
@@ -94,10 +92,7 @@ export const checkAuthStatus = () => {
   return (dispatch) => {
     const token = localStorage.getItem("token");
     if (token) {
-      // let expireDate = JSON.parse(localStorage.getItem("expireDate"));
-      // console.log("Expire Date with JSON.parse: " + expireDate);
       const expireDate = new Date(localStorage.getItem("expireDate"));
-      console.log("Expire Date with New Date: " + expireDate);
       const dateNow = new Date().getTime();
       if (expireDate > dateNow) {
         const userId = localStorage.getItem("userId");

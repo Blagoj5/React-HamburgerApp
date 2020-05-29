@@ -71,7 +71,6 @@ export const initOrders = (token, userId) => {
         dispatch(initOrdersStart());
         const arrayOrders = [];
         for (let key in res.data) {
-          console.log(res.data);
           arrayOrders.push({
             id: key,
             ...res.data[key],

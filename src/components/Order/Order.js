@@ -2,7 +2,6 @@ import React from "react";
 import styles from "./Order.module.css";
 
 const order = (props) => {
-  console.log(props.ingredients);
   let ingredients = Object.entries(props.ingredients).map((ingredient) => {
     return (
       <span

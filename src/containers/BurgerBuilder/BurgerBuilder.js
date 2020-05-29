@@ -9,7 +9,7 @@ import withErrorHandling from "../../hoc/withErrorHandling/withErrorHandling";
 import { connect } from "react-redux";
 import * as actionCreators from "../../store/actions/index";
 
-class BurgerBuilder extends Component {
+export class BurgerBuilder extends Component {
   state = {
     purchase: false,
     loading: false,
@@ -48,7 +48,6 @@ class BurgerBuilder extends Component {
   }
 
   render() {
-    console.log();
     const disabledInfo = {
       ...this.props.ingr,
     };

@@ -9,6 +9,7 @@ import { faExchangeAlt } from "@fortawesome/free-solid-svg-icons";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import Alert from "../../components/UI/Alert/Alert";
 import { Redirect } from "react-router";
+import { checkValidity } from "../../shared/utility";
 
 export class Auth extends Component {
   state = {
@@ -52,44 +53,14 @@ export class Auth extends Component {
     }
   }
 
-  checkValidation = (value, rules) => {
-    let isValid = true;
-    if (!rules) {
-      return true;
-    }
-
-    if (rules.required) {
-      isValid = value.trim() !== "" && isValid;
-    }
-
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-
-    if (rules.isEmail) {
-      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-      isValid = pattern.test(value) && isValid;
-    }
-
-    if (rules.isNumeric) {
-      const pattern = /^\d+$/;
-      isValid = pattern.test(value) && isValid;
-    }
-
-    return isValid;
-  };
-
   changeInputHandler = (event, elementIdentifier) => {
+    // You can also do this with updateObject utility, check CotnactData component for example
     const updatedForm = {
       ...this.state.controls,
       [elementIdentifier]: {
         ...this.state.controls[elementIdentifier],
         value: event.target.value,
-        valid: this.checkValidation(
+        valid: checkValidity(
           event.target.value,
           this.state.controls[elementIdentifier].validation
         ),
@@ -134,8 +105,6 @@ export class Auth extends Component {
       });
     }
 
-    console.log(this.props.token);
-    console.log(this.props.redirectAuthUrl);
     let form = this.props.token ? (
       <Redirect to={this.props.redirectAuthUrl} />
     ) : (
