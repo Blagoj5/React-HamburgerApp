@@ -45,6 +45,7 @@ export class BurgerBuilder extends Component {
 
   componentDidMount() {
     this.props.initIngredients();
+    console.log(this.props.ingr);
   }
 
   render() {
