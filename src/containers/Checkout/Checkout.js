@@ -1,73 +1,47 @@
-import React, { Component } from "react";
+import React from "react";
 import CheckoutSummary from "../../components/Order/CheckoutSummary/CheckoutSummary";
 import ContactData from "./ContactData/ContactData";
 import { Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import * as burgerActionCreators from "../../store/actions/index";
 
-export class Checkout extends Component {
-  cancelCheckoutHandler = () => {
-    this.props.history.goBack();
+const Checkout = (props) => {
+  const cancelCheckoutHandler = () => {
+    props.history.goBack();
   };
 
-  continueCheckoutHandler = () => {
-    this.props.history.replace("/checkout/contact-data");
+  const continueCheckoutHandler = () => {
+    props.history.replace("/checkout/contact-data");
   };
 
-  componentWillMount() {
-    if (!JSON.parse(localStorage.getItem("ingredients"))) {
-      localStorage.setItem("ingredients", JSON.stringify(this.props.ingr));
-      localStorage.setItem(
-        "totalPrice",
-        JSON.stringify(this.props.totalP.toFixed(2))
-      );
-    }
+  let checkoutSummary = <Redirect to="/" />;
+  let purchased = props.purchased ? <Redirect to="/" /> : null;
 
-    const prevNeededState = {
-      ingredients: JSON.parse(localStorage.getItem("ingredients")),
-      totalPrice: +JSON.parse(localStorage.getItem("totalPrice")),
-    };
+  // // This function is in case if u want this.props.purchased by default to be true, in order to have redirects in case someone doesn't have added ingreridents so by default u redirect them.
+  // // However in a case where the user builds a hamburger first without being logged in and clicks on the sign up button (and he signs in), you  need to allow him to go straight to checkout, so u need to evade the default redirect.
+  // if (this.props.building && this.props.purchased) {
+  //   purchased = null;
+  // }
 
-    // When the page refreshes or something, make sure that the state is the same as the one before refresh
-    this.props.saveIngrStateOnRefresh(prevNeededState);
+  if (props.ingr) {
+    checkoutSummary = (
+      <div>
+        {purchased}
+        <CheckoutSummary
+          ingredients={props.ingr}
+          cancelCheckout={cancelCheckoutHandler}
+          continueCheckout={continueCheckoutHandler}
+        />
+        <Route
+          path={props.match.path + "/contact-data"}
+          component={ContactData}
+        />
+      </div>
+    );
   }
 
-  componentWillUnmount() {
-    localStorage.removeItem("totalPrice");
-    localStorage.removeItem("ingredients");
-    this.props.initialStateActivation();
-  }
-
-  render() {
-    let checkoutSummary = <Redirect to="/" />;
-    let purchased = this.props.purchased ? <Redirect to="/" /> : null;
-
-    // // This function is in case if u want this.props.purchased by default to be true, in order to have redirects in case someone doesn't have added ingreridents so by default u redirect them.
-    // // However in a case where the user builds a hamburger first without being logged in and clicks on the sign up button (and he signs in), you  need to allow him to go straight to checkout, so u need to evade the default redirect.
-    // if (this.props.building && this.props.purchased) {
-    //   purchased = null;
-    // }
-
-    if (this.props.ingr) {
-      checkoutSummary = (
-        <div>
-          {purchased}
-          <CheckoutSummary
-            ingredients={this.props.ingr}
-            cancelCheckout={this.cancelCheckoutHandler}
-            continueCheckout={this.continueCheckoutHandler}
-          />
-          <Route
-            path={this.props.match.path + "/contact-data"}
-            component={ContactData}
-          />
-        </div>
-      );
-    }
-
-    return checkoutSummary;
-  }
-}
+  return checkoutSummary;
+};
 
 const mapStateToProps = (state) => {
   return {
